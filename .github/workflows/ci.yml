@@ -1,0 +1,57 @@
+name: CI/CD Build Tests
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
+  schedule:
+    - cron: '30 3 * * 1,6'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: ['22', '24']
+    name: ${{ matrix.os }} - Node ${{ matrix.node }} Test
+    steps:
+    - uses: actions/checkout@v4
+    - name: Enable Corepack
+      run: |
+        npm install -g corepack
+        corepack enable
+    - uses: actions/setup-node@v4
+      name: Set up Node (Yarn Cache)
+      with:
+        node-version: ${{ matrix.node }}
+        cache: yarn
+        cache-dependency-path: yarn.lock
+    - name: Install Dependencies
+      run: yarn
+    - name: Execute Unit Tests
+      run: yarn test
+
+  publish:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22.22.1'  # Pin to avoid 22.22.2 npm self-upgrade bug (nodejs/node#62425)
+    - name: Update npm for OIDC support
+      run: npm install -g npm@latest
+    - name: Enable Corepack
+      run: |
+        npm install -g corepack
+        corepack enable
+    - name: Install Dependencies
+      run: yarn
+    - name: Publish to NPM
+      run: npm publish --access public --provenance

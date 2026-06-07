@@ -1,0 +1,76 @@
+{
+  "name": "@nram/setup",
+  "version": "22.0.0",
+  "description": "Connects AI coding agents (Claude Code, Codex, Cursor, VS Code, and more) to a Neural Ram (nram) memory server: MCP registration plus agent memory instructions, in one command",
+  "keywords": [
+    "nram",
+    "neural-ram",
+    "mcp",
+    "model-context-protocol",
+    "memory",
+    "ai",
+    "agent",
+    "setup",
+    "onboarding",
+    "claude-code",
+    "codex",
+    "cursor",
+    "copilot",
+    "opencode"
+  ],
+  "homepage": "https://nram.ai",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "nram-setup": "./dist/index.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn build:typescript",
+    "build:typescript": "./node_modules/.bin/tsc",
+    "test": "yarn test:style && yarn test:typecheck && yarn test:units",
+    "test:typecheck": "./node_modules/.bin/tsc --noEmit",
+    "test:style": "yarn style",
+    "test:units": "node --import tsx --test --test-timeout 120000 test/test.ts",
+    "style": "./node_modules/.bin/eslint src/**/*.ts test/**/*.ts",
+    "fix-style": "./node_modules/.bin/eslint --fix src/**/*.ts test/**/*.ts",
+    "fix:style": "yarn fix-style",
+    "prepublishOnly": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nram-ai/setup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nram-ai/setup/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "engineStrict": true,
+  "author": {
+    "name": "Brandon Lehmann",
+    "email": "brandonlehmann@gmail.com"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/node": "^25.5.2",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.60.0"
+  },
+  "packageManager": "yarn@4.16.0+sha512.5374c94eb4ef6aa8188fb112f20c1aa6569f248d676c5e576e1fd2a1a4d8d87a96df65d9dfe1c2a0252cbe38bda46cf18d955005b81b43cc7607a5c9d56fd2b6",
+  "dependencies": {
+    "@clack/prompts": "^1.5.1",
+    "chalk": "^5.6.2",
+    "commander": "^15.0.0",
+    "smol-toml": "^1.6.1",
+    "yaml": "^2.9.0"
+  }
+}
