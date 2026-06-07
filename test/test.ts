@@ -48,6 +48,7 @@ import { configure_amp } from '../src/helpers/configure/amp';
 import { configure_antigravity } from '../src/helpers/configure/antigravity';
 import { configure_copilot } from '../src/helpers/configure/copilot';
 import { configure_droid, droid_mcp_entry } from '../src/helpers/configure/droid';
+import { configure_grok, grok_mcp_block } from '../src/helpers/configure/grok';
 import { configure_hermes, hermes_mcp_block } from '../src/helpers/configure/hermes';
 import { configure_junie } from '../src/helpers/configure/junie';
 import { configure_kilo, kilo_mcp_entry } from '../src/helpers/configure/kilo';
@@ -56,6 +57,7 @@ import { configure_kiro, kiro_mcp_entry, kiro_steering_file } from '../src/helpe
 import { configure_openclaw } from '../src/helpers/configure/openclaw';
 import { configure_pi } from '../src/helpers/configure/pi';
 import { configure_trae } from '../src/helpers/configure/trae';
+import { configure_vibe, vibe_mcp_block } from '../src/helpers/configure/vibe';
 import { configure_vscode, vscode_instruction_file } from '../src/helpers/configure/vscode';
 import { ActionResult, Scope, SetupOptions } from '../src/types';
 
@@ -922,6 +924,74 @@ describe('configure_hermes', () => {
     });
 });
 
+describe('configure_grok', () => {
+    it('writes config.toml and hooks/nram.json at user scope, then reruns idempotently', async () => {
+        const home = temp();
+
+        await with_home(home, async () => {
+            const first = await configure_grok(setup_options());
+
+            assert.strictEqual(result_for(first, 'MCP registration').kind, 'written');
+            assert.strictEqual(result_for(first, 'SessionStart hook').kind, 'written');
+
+            const config_text = readFileSync(join(home, '.grok', 'config.toml'), 'utf8');
+            const hooks_text = readFileSync(join(home, '.grok', 'hooks', 'nram.json'), 'utf8');
+
+            assert.ok(config_text.includes('[mcp_servers.nram]'));
+            assert.ok(hooks_text.includes('@nram/setup'));
+            assert.ok(hooks_text.includes('--url http://localhost:8674'));
+
+            const second = await configure_grok(setup_options());
+
+            assert.strictEqual(result_for(second, 'MCP registration').kind, 'skipped');
+            assert.strictEqual(result_for(second, 'SessionStart hook').kind, 'skipped');
+
+            assert.strictEqual(readFileSync(join(home, '.grok', 'config.toml'), 'utf8'), config_text);
+            assert.strictEqual(readFileSync(join(home, '.grok', 'hooks', 'nram.json'), 'utf8'), hooks_text);
+
+            // user-scope hooks are always trusted; no trust note expected
+            assert.ok(!first.some(result => result.action === 'Hook trust'));
+        });
+    });
+
+    it('skips when mcp_servers.nram exists outside the markers', async () => {
+        const home = temp();
+
+        await with_home(home, async () => {
+            mkdirSync(join(home, '.grok'), { recursive: true });
+
+            const original = '[mcp_servers.nram]\nurl = "http://other:1234/mcp"\n';
+
+            writeFileSync(join(home, '.grok', 'config.toml'), original);
+
+            const results = await configure_grok(setup_options({ instructions: undefined }));
+
+            assert.strictEqual(result_for(results, 'MCP registration').kind, 'skipped');
+            assert.strictEqual(readFileSync(join(home, '.grok', 'config.toml'), 'utf8'), original);
+        });
+    });
+
+    it('adds the hook-trust note at project scope only', async () => {
+        const dir = temp();
+
+        await with_cwd(dir, async () => {
+            const results = await configure_grok(setup_options({ scope: Scope.PROJECT, mcp_url: undefined }));
+
+            assert.strictEqual(result_for(results, 'SessionStart hook').kind, 'written');
+            assert.strictEqual(result_for(results, 'Hook trust').kind, 'manual');
+            assert.ok(result_for(results, 'Hook trust').detail.includes('/hooks-trust'));
+            assert.ok(existsSync(join(dir, '.grok', 'hooks', 'nram.json')));
+        });
+    });
+
+    it('references the API key via environment variable only', () => {
+        const block = grok_mcp_block('http://localhost:8674/mcp', 'nram_k_abc123');
+
+        assert.ok(block.includes('Bearer ${NRAM_API_KEY}'));
+        assert.ok(!block.includes('nram_k_abc123'));
+    });
+});
+
 describe('configure_junie', () => {
     it('writes mcp/mcp.json and AGENTS.md at user scope', async () => {
         const home = temp();
@@ -1053,6 +1123,106 @@ describe('configure_trae', () => {
         const results = await configure_trae(setup_options({ mcp_url: undefined, scope: Scope.USER }));
 
         assert.strictEqual(result_for(results, 'Agent instructions').kind, 'skipped');
+    });
+});
+
+describe('configure_vibe', () => {
+    const with_vibe_home = (home: string, run: () => Promise<void>): Promise<void> =>
+        with_env('VIBE_HOME', home, run);
+
+    it('writes config.toml and AGENTS.md at user scope, then reruns idempotently', async () => {
+        const home = temp();
+
+        await with_vibe_home(home, async () => {
+            const first = await configure_vibe(setup_options());
+
+            assert.strictEqual(result_for(first, 'MCP registration').kind, 'written');
+            assert.strictEqual(result_for(first, 'Agent instructions').kind, 'written');
+
+            const config_text = readFileSync(join(home, 'config.toml'), 'utf8');
+            const agents_text = readFileSync(join(home, 'AGENTS.md'), 'utf8');
+
+            assert.ok(config_text.includes('[[mcp_servers]]'));
+            assert.ok(config_text.includes('name = "nram"'));
+            assert.ok(config_text.includes('transport = "streamable-http"'));
+            assert.ok(agents_text.includes('procedural_fetch'));
+
+            const second = await configure_vibe(setup_options());
+
+            assert.strictEqual(result_for(second, 'MCP registration').kind, 'skipped');
+            assert.strictEqual(result_for(second, 'Agent instructions').kind, 'skipped');
+
+            assert.strictEqual(readFileSync(join(home, 'config.toml'), 'utf8'), config_text);
+            assert.strictEqual(readFileSync(join(home, 'AGENTS.md'), 'utf8'), agents_text);
+        });
+    });
+
+    it('appends to an existing array of MCP servers and preserves comments', async () => {
+        const home = temp();
+
+        const original = '# my comment\n[[mcp_servers]]\nname = "other"\ntransport = "stdio"\ncommand = "x"\n';
+
+        writeFileSync(join(home, 'config.toml'), original);
+
+        await with_vibe_home(home, async () => {
+            const results = await configure_vibe(setup_options({ instructions: undefined }));
+
+            assert.strictEqual(result_for(results, 'MCP registration').kind, 'updated');
+
+            const updated = readFileSync(join(home, 'config.toml'), 'utf8');
+
+            assert.ok(updated.startsWith(original.trimEnd()));
+            assert.ok(updated.includes('# my comment'));
+            assert.ok(updated.includes('name = "nram"'));
+        });
+    });
+
+    it('skips when an entry named nram exists outside the markers', async () => {
+        const home = temp();
+
+        const original = '[[mcp_servers]]\nname = "nram"\ntransport = "http"\nurl = "http://other:1234/mcp"\n';
+
+        writeFileSync(join(home, 'config.toml'), original);
+
+        await with_vibe_home(home, async () => {
+            const results = await configure_vibe(setup_options({ instructions: undefined }));
+
+            assert.strictEqual(result_for(results, 'MCP registration').kind, 'skipped');
+            assert.strictEqual(readFileSync(join(home, 'config.toml'), 'utf8'), original);
+        });
+    });
+
+    it('refuses to create a project config.toml but updates an existing one', async () => {
+        const dir = temp();
+
+        await with_cwd(dir, async () => {
+            // a fresh project config would shadow the user-level file entirely
+            const missing = await configure_vibe(setup_options({ scope: Scope.PROJECT, instructions: undefined }));
+
+            assert.strictEqual(result_for(missing, 'MCP registration').kind, 'manual');
+            assert.ok(!existsSync(join(dir, '.vibe', 'config.toml')));
+
+            mkdirSync(join(dir, '.vibe'), { recursive: true });
+
+            writeFileSync(join(dir, '.vibe', 'config.toml'), 'model = "devstral"\n');
+
+            const present = await configure_vibe(setup_options({ scope: Scope.PROJECT }));
+
+            assert.strictEqual(result_for(present, 'MCP registration').kind, 'updated');
+            assert.strictEqual(result_for(present, 'Agent instructions').kind, 'written');
+
+            assert.ok(readFileSync(join(dir, '.vibe', 'config.toml'), 'utf8').startsWith('model = "devstral"'));
+            // project-scope instructions land in the shared repository-root AGENTS.md
+            assert.ok(readFileSync(join(dir, 'AGENTS.md'), 'utf8').includes('procedural_fetch'));
+        });
+    });
+
+    it('references the API key via environment variable only', () => {
+        const block = vibe_mcp_block('http://localhost:8674/mcp', 'nram_k_abc123');
+
+        assert.ok(block.includes('api_key_env = "NRAM_API_KEY"'));
+        assert.ok(block.includes('api_key_format = "Bearer {token}"'));
+        assert.ok(!block.includes('nram_k_abc123'));
     });
 });
 

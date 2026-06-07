@@ -35,7 +35,9 @@ export enum Harness {
     TRAE = 14,
     VSCODE = 15,
     GOOGLE_ANTIGRAVITY = 16,
-    KIMI_CODE = 17
+    KIMI_CODE = 17,
+    MISTRAL_VIBE = 18,
+    XAI_GROK_BUILD = 19
 }
 
 export enum Scope {

@@ -8,14 +8,14 @@
 
 <p align="center">
   <strong>One command to connect your AI coding tools to Neural Ram.</strong><br />
-  Registers the MCP connection and installs the standing memory instructions for 17 tools, in one interactive run.
+  Registers the MCP connection and installs the standing memory instructions for 19 tools, in one interactive run.
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-7FCFFA?style=flat-square" alt="License: MIT" /></a>
   <a href="https://www.npmjs.com/package/@nram/setup"><img src="https://img.shields.io/npm/v/@nram/setup?style=flat-square&color=7FCFFA" alt="npm version" /></a>
   <img src="https://img.shields.io/badge/Node.js-22%2B-5FA04E?style=flat-square&logo=node.js&logoColor=white" alt="Node.js 22+" />
-  <img src="https://img.shields.io/badge/supports-17_tools-7FCFFA?style=flat-square" alt="Supports 17 tools" />
+  <img src="https://img.shields.io/badge/supports-19_tools-7FCFFA?style=flat-square" alt="Supports 19 tools" />
   <a href="https://github.com/nram-ai/setup/stargazers"><img src="https://img.shields.io/github/stars/nram-ai/setup?style=flat-square&color=7FCFFA" alt="GitHub stars" /></a>
   <img src="https://img.shields.io/github/last-commit/nram-ai/setup?style=flat-square&color=7FCFFA" alt="Last commit" />
 </p>
@@ -66,6 +66,7 @@ Then it configures each selected tool and prints exactly what it did: every file
 | Cursor | `mcp.json` | `.cursor/rules/` (project scope) |
 | Droid (Factory) | `mcp.json` | `AGENTS.md` |
 | GitHub Copilot CLI | `mcp-config.json` | `copilot-instructions.md` / `AGENTS.md` |
+| Grok Build (xAI) | `config.toml` | SessionStart hook (project scope needs `/hooks-trust`) |
 | Hermes | `config.yaml` | `AGENTS.md` (project scope) |
 | Junie (JetBrains) | `mcp/mcp.json` | `AGENTS.md` |
 | Kilo Code | `kilo.jsonc` | rules file |
@@ -75,6 +76,7 @@ Then it configures each selected tool and prints exactly what it did: every file
 | OpenCode | `opencode.json` | `AGENTS.md` |
 | Pi | `mcp.json` | `AGENTS.md` |
 | Trae | through Trae's own MCP UI | rules file (project scope) |
+| Vibe (Mistral) | `config.toml` (a project file is updated, never created) | `AGENTS.md` |
 | VS Code | `.vscode/mcp.json` | instructions file |
 
 Where a tool genuinely cannot do something (a scope it does not support, OAuth it has not implemented, an instructions file it will not read), the wizard says so plainly and prints what to do instead. It never writes a file the tool would ignore.

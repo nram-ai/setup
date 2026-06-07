@@ -29,6 +29,7 @@ import {
     copilot_dir,
     cursor_dir,
     factory_dir,
+    grok_dir,
     hermes_dir,
     junie_dir,
     kilo_dir,
@@ -38,6 +39,7 @@ import {
     opencode_dir,
     pi_dir,
     trae_dir,
+    vibe_dir,
     vscode_user_dir
 } from './paths';
 import { configure_amp } from './configure/amp';
@@ -47,6 +49,7 @@ import { configure_codex } from './configure/codex';
 import { configure_copilot } from './configure/copilot';
 import { configure_cursor } from './configure/cursor';
 import { configure_droid } from './configure/droid';
+import { configure_grok } from './configure/grok';
 import { configure_hermes } from './configure/hermes';
 import { configure_junie } from './configure/junie';
 import { configure_kilo } from './configure/kilo';
@@ -56,6 +59,7 @@ import { configure_openclaw } from './configure/openclaw';
 import { configure_opencode } from './configure/opencode';
 import { configure_pi } from './configure/pi';
 import { configure_trae } from './configure/trae';
+import { configure_vibe } from './configure/vibe';
 import { configure_vscode } from './configure/vscode';
 
 export { Harness, Scope };
@@ -104,6 +108,11 @@ export const HARNESSES: HarnessDescriptor[] = [{
         ? existsSync(copilot_dir())
         : existsSync(resolve(process.cwd(), '.github', 'copilot-instructions.md')),
     configure: configure_copilot
+}, {
+    harness: Harness.XAI_GROK_BUILD,
+    label: 'Grok Build',
+    detected: scope => existsSync(grok_dir(scope)),
+    configure: configure_grok
 }, {
     harness: Harness.HERMES,
     label: 'Hermes',
@@ -155,6 +164,11 @@ export const HARNESSES: HarnessDescriptor[] = [{
     label: 'Trae',
     detected: scope => existsSync(trae_dir(scope)),
     configure: configure_trae
+}, {
+    harness: Harness.MISTRAL_VIBE,
+    label: 'Vibe',
+    detected: scope => existsSync(vibe_dir(scope)),
+    configure: configure_vibe
 }, {
     harness: Harness.VSCODE,
     label: 'VS Code',

@@ -176,6 +176,27 @@ export const pi_dir = (): string =>
     resolve(user_home(), '.pi', 'agent');
 
 /**
+ * Returns the Vibe (Mistral) home directory for the given scope (honors
+ * VIBE_HOME at user scope)
+ *
+ * @param scope the configuration scope
+ */
+export const vibe_dir = (scope: Scope): string =>
+    scope === Scope.USER
+        ? resolve(process.env.VIBE_HOME ?? resolve(user_home(), '.vibe'))
+        : resolve(process.cwd(), '.vibe');
+
+/**
+ * Returns the Grok Build configuration directory for the given scope
+ *
+ * @param scope the configuration scope
+ */
+export const grok_dir = (scope: Scope): string =>
+    scope === Scope.USER
+        ? resolve(user_home(), '.grok')
+        : resolve(process.cwd(), '.grok');
+
+/**
  * Returns the Trae configuration directory for the given scope
  *
  * @param scope the configuration scope
