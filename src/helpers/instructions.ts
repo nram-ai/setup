@@ -145,11 +145,12 @@ export const fetch_instructions = async (base_url: string, format: Format, timeo
 export const builtin_notice = (format: Format): string => format === 'full'
     ? 'Memory (nram): the canonical nram agent instructions could not be loaded from the configured nram ' +
     'server, the local cache, or the GitHub fallback. Inform the user that the nram instructions failed to ' +
-    'load and suggest re-running `npx -y @nram/setup` once their nram server is reachable. nram remains the ' +
-    'only memory system: recall before assuming, store what you learn, and never write local memory files.'
+    'load and suggest re-running `npx -y @nram-ai/setup-agents` once their nram server is reachable. ' +
+    'nram remains the only memory system: recall before assuming, store what you learn, and never write ' +
+    'local memory files.'
     : 'Memory (nram): the canonical nram rules could not be loaded from the nram server, the local cache, or ' +
-        'the GitHub fallback. Inform the user and suggest re-running `npx -y @nram/setup` once their nram server ' +
-        'is reachable. nram remains the only memory system; never write local memory files.';
+        'the GitHub fallback. Inform the user and suggest re-running `npx -y @nram-ai/setup-agents` once their ' +
+        'nram server is reachable. nram remains the only memory system; never write local memory files.';
 
 /**
  * Resolves the instructions text through the fallback chain: the configured

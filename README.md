@@ -2,7 +2,7 @@
   <img src="https://nram.ai/brand.png" alt="Neural Ram" width="150" />
 </p>
 
-<h1 align="center">@nram/setup</h1>
+<h1 align="center">@nram-ai/setup-agents</h1>
 
 <p align="center"><sub>the setup wizard for <a href="https://github.com/nram-ai/nram">Neural Ram</a> (<code>nram</code> for short)</sub></p>
 
@@ -13,11 +13,11 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-7FCFFA?style=flat-square" alt="License: MIT" /></a>
-  <a href="https://www.npmjs.com/package/@nram/setup"><img src="https://img.shields.io/npm/v/@nram/setup?style=flat-square&color=7FCFFA" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@nram-ai/setup-agents"><img src="https://img.shields.io/npm/v/@nram-ai/setup-agents?style=flat-square&color=7FCFFA" alt="npm version" /></a>
   <img src="https://img.shields.io/badge/Node.js-22%2B-5FA04E?style=flat-square&logo=node.js&logoColor=white" alt="Node.js 22+" />
   <img src="https://img.shields.io/badge/supports-19_tools-7FCFFA?style=flat-square" alt="Supports 19 tools" />
-  <a href="https://github.com/nram-ai/setup/stargazers"><img src="https://img.shields.io/github/stars/nram-ai/setup?style=flat-square&color=7FCFFA" alt="GitHub stars" /></a>
-  <img src="https://img.shields.io/github/last-commit/nram-ai/setup?style=flat-square&color=7FCFFA" alt="Last commit" />
+  <a href="https://github.com/nram-ai/setup-agents/stargazers"><img src="https://img.shields.io/github/stars/nram-ai/setup-agents?style=flat-square&color=7FCFFA" alt="GitHub stars" /></a>
+  <img src="https://img.shields.io/github/last-commit/nram-ai/setup-agents?style=flat-square&color=7FCFFA" alt="Last commit" />
 </p>
 
 <p align="center">
@@ -31,7 +31,7 @@
 ## Quick Start
 
 ```bash
-npx @nram/setup
+npx @nram-ai/setup-agents
 ```
 
 Neural Ram is the continuity layer for everything you do with AI: one self-hosted server that keeps what mattered across every tool, every conversation, and every machine. This wizard wires your coding tools into it.
@@ -94,7 +94,7 @@ Where a tool genuinely cannot do something (a scope it does not support, OAuth i
 ## Flags
 
 ```
-npx @nram/setup [options]
+npx @nram-ai/setup-agents [options]
 
   -u, --url <url>       the base URL of your nram server (skips the prompt)
   --skip-mcp            do not register the nram MCP server

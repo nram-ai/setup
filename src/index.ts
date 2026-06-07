@@ -24,7 +24,7 @@ import { program } from 'commander';
 import { builtin_notice, resolve_instructions } from './helpers/instructions';
 import { normalize_base_url } from './helpers/url';
 
-program.name('npx @nram/setup')
+program.name('npx @nram-ai/setup-agents')
     .description('Helps to configure local harnesses to utilize Neural Ram');
 
 program.option('-s, --session-start', 'print out the session start protocol');

@@ -195,7 +195,7 @@ describe('upsert_marker_block', () => {
 describe('upsert_session_start_hook', () => {
     const base_url = 'http://localhost:8674';
 
-    const command = 'npx -y @nram/setup --session-start --url http://localhost:8674';
+    const command = 'npx -y @nram-ai/setup-agents --session-start --url http://localhost:8674';
 
     it('adds the hook to an empty configuration', () => {
         const { config, changed } = upsert_session_start_hook({}, base_url);
@@ -240,7 +240,7 @@ describe('upsert_session_start_hook', () => {
             hooks: {
                 SessionStart: [{
                     matcher: '',
-                    hooks: [{ type: 'command', command: 'npx -y @nram/setup --session-start' }]
+                    hooks: [{ type: 'command', command: 'npx -y @nram-ai/setup-agents --session-start' }]
                 }]
             }
         };
@@ -257,7 +257,7 @@ describe('upsert_session_start_hook', () => {
         assert.ok(moved.changed);
         assert.strictEqual(moved.config.hooks.SessionStart.length, 1);
         assert.strictEqual(moved.config.hooks.SessionStart[0].hooks[0].command,
-            'npx -y @nram/setup --session-start --url http://other:9999');
+            'npx -y @nram-ai/setup-agents --session-start --url http://other:9999');
     });
 });
 
@@ -448,7 +448,7 @@ describe('configure_codex', () => {
             const hooks_after_first = readFileSync(join(home, 'hooks.json'), 'utf8');
 
             assert.ok(config_after_first.includes('[mcp_servers.nram]'));
-            assert.ok(hooks_after_first.includes('@nram/setup'));
+            assert.ok(hooks_after_first.includes('@nram-ai/setup-agents'));
             assert.ok(hooks_after_first.includes('--url http://localhost:8674'));
 
             const second = await configure_codex(setup_options());
@@ -938,7 +938,7 @@ describe('configure_grok', () => {
             const hooks_text = readFileSync(join(home, '.grok', 'hooks', 'nram.json'), 'utf8');
 
             assert.ok(config_text.includes('[mcp_servers.nram]'));
-            assert.ok(hooks_text.includes('@nram/setup'));
+            assert.ok(hooks_text.includes('@nram-ai/setup-agents'));
             assert.ok(hooks_text.includes('--url http://localhost:8674'));
 
             const second = await configure_grok(setup_options());

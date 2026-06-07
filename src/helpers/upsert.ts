@@ -26,7 +26,7 @@ import { ActionResult } from '../types';
  * Identifies our SessionStart hook entry among the user's hooks, across every
  * historical command format
  */
-export const SESSION_START_MARKER = '@nram/setup';
+export const SESSION_START_MARKER = '@nram-ai/setup-agents';
 
 /**
  * The shell command injected as a SessionStart hook; its stdout (the agent
@@ -36,7 +36,7 @@ export const SESSION_START_MARKER = '@nram/setup';
  * @param base_url the normalized nram base URL the hook fetches from
  */
 export const session_start_command = (base_url: string): string =>
-    `npx -y @nram/setup --session-start --url ${base_url}`;
+    `npx -y @nram-ai/setup-agents --session-start --url ${base_url}`;
 
 export type MarkerStyle = 'hash' | 'html';
 
@@ -156,7 +156,7 @@ export const upsert_marker_block = (
 /**
  * Upserts our SessionStart hook entry into a hooks-style configuration object
  * (the SessionStart shape is identical between Claude Code's settings.json
- * and Codex's hooks.json). An existing entry referencing `@nram/setup` is
+ * and Codex's hooks.json). An existing entry referencing `@nram-ai/setup-agents` is
  * replaced in place when its command differs (a different server URL, or the
  * URL-less command written by older package versions), left alone when it
  * already matches, and appended when absent. Unrelated hooks are never touched

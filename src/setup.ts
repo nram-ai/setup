@@ -125,7 +125,7 @@ export const run_setup = async (flags: SetupFlags = {}): Promise<void> => {
         }
     }
 
-    intro(chalk.bold('@nram/setup'));
+    intro(chalk.bold('@nram-ai/setup-agents'));
 
     const scope = guard(await select({
         message: 'Configure at which level?',

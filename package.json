@@ -1,5 +1,5 @@
 {
-  "name": "@nram/setup",
+  "name": "@nram-ai/setup-agents",
   "version": "22.0.0",
   "description": "Connects AI coding agents (Claude Code, Codex, Cursor, VS Code, and more) to a Neural Ram (nram) memory server: MCP registration plus agent memory instructions, in one command",
   "keywords": [
@@ -42,10 +42,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nram-ai/setup.git"
+    "url": "git+https://github.com/nram-ai/setup-agents.git"
   },
   "bugs": {
-    "url": "https://github.com/nram-ai/setup/issues"
+    "url": "https://github.com/nram-ai/setup-agents/issues"
   },
   "engines": {
     "node": ">=22"
