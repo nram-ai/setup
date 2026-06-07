@@ -12,6 +12,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/nram-ai/setup-agents/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/nram-ai/setup-agents/ci.yml?branch=master&style=flat-square" alt="CI/CD Build Tests" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-7FCFFA?style=flat-square" alt="License: MIT" /></a>
   <a href="https://www.npmjs.com/package/@nram-ai/setup-agents"><img src="https://img.shields.io/npm/v/@nram-ai/setup-agents?style=flat-square&color=7FCFFA" alt="npm version" /></a>
   <img src="https://img.shields.io/badge/Node.js-22%2B-5FA04E?style=flat-square&logo=node.js&logoColor=white" alt="Node.js 22+" />
